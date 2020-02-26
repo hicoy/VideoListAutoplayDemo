@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">VideoRecyclerViewAutoPlayDemo</string>
+    <string name="btn_text">Video List</string>
+    <!-- fill the video url you want to play-->
+    <string name="video_url">http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4</string>
+</resources>
