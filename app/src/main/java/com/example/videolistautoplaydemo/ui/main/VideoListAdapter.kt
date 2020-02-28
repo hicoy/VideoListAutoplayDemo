@@ -30,8 +30,6 @@ class VideoListAdapter : ListAdapter<VideoInfo, RecyclerView.ViewHolder>(itemCal
         }
     }
 
-    private var playingViewHolder: VideoViewHolder? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return VideoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_video, parent, false))
     }
@@ -40,6 +38,15 @@ class VideoListAdapter : ListAdapter<VideoInfo, RecyclerView.ViewHolder>(itemCal
         if (holder is VideoViewHolder) {
             holder.pauseVideo()
             holder.bind(currentList[position])
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        when (holder) {
+            is VideoViewHolder -> {
+                holder.pauseVideo()
+            }
         }
     }
 
@@ -54,11 +61,13 @@ class VideoListAdapter : ListAdapter<VideoInfo, RecyclerView.ViewHolder>(itemCal
             payloads.forEach {
                 when(it) {
                     is VideoAction.PLAY -> {
-                        playingViewHolder?.pauseVideo()
                         val action = payloads[0] as VideoAction.PLAY
                         val videoViewHolder = holder as VideoViewHolder
                         videoViewHolder.playVideo(action.player)
-                        playingViewHolder = videoViewHolder
+                    }
+                    is VideoAction.PAUSE -> {
+                        val videoViewHolder = holder as VideoViewHolder
+                        videoViewHolder.pauseVideo()
                     }
                 }
             }
@@ -91,7 +100,6 @@ class VideoViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
                     playerView.onResume()
                     playerView.player?.removeListener(this)
                 }
-
             }
         }
     }
@@ -130,4 +138,5 @@ class VideoViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
 sealed class VideoAction {
     class PLAY(val player: SimpleExoPlayer): VideoAction()
+    object PAUSE : VideoAction()
 }

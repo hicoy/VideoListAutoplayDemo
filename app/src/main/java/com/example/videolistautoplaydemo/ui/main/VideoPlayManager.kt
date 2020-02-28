@@ -39,6 +39,7 @@ class VideoPlayManager(
         recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    adapter.notifyItemChanged(playingPos, VideoAction.PAUSE)
                     // play First Completely Visible Item
                     val playPos = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
                     Log.e(TAG,"play position $playPos")
